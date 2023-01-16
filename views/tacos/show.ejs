@@ -5,6 +5,15 @@
   <p>From the kitchen of <%= taco.owner.name %>...</p>
   <h1><%= taco.name %></h1>
   <h2>This taco is <%= taco.tasty ? 'tasty! 😋' : 'not tasty! 😫' %></h2>
+  <% taco.comments?.forEach(comment => { %>
+    <p>
+      <%= comment.content %> - <%= comment.commenter.name %> 
+    </p> 
+  <% }) %>
+  <form action="/tacos/<%= taco._id %>/comments" method="POST">
+    <textarea name="content"></textarea><br>
+    <button>Add Comment</button>
+  </form>
   <% if (user) { %>
     <form 
       action="/tacos/<%= taco._id %>/flip-tasty?_method=PATCH"

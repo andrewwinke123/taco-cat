@@ -30,6 +30,7 @@ function create(req, res) {
 function show(req, res) {
   Taco.findById(req.params.id)
   .populate('owner')
+  .populate('comments.commenter')
   .then(taco => {
     res.render('tacos/show', {
       title: "🌮 show",
@@ -112,6 +113,28 @@ function deleteTaco(req, res) {
   })
 }
 
+function addComment(req, res) {
+  // Find the taco to push the comments to
+  Taco.findById(req.params.id)
+  .then(taco => {
+    // add the logged in user's profile _id to req.body before pushing into the array
+    req.body.commenter = req.user.profile._id
+    taco.comments.push(req.body)
+    taco.save()
+    .then(()=> {
+      res.redirect(`/tacos/${taco._id}`)
+    })
+    .catch(err => {
+      console.log(err)
+      res.redirect('/tacos')
+    })
+  })
+  .catch(err => {
+    console.log(err)
+    res.redirect('/tacos')
+  })
+}
+
 export {
   index,
   create,
@@ -119,5 +142,6 @@ export {
   flipTasty,
   edit,
   update,
-  deleteTaco as delete
+  deleteTaco as delete,
+  addComment
 }
