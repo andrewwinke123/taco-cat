@@ -158,6 +158,46 @@ function deleteComment(req, res) {
   })
 }
 
+function editComment(req, res) {
+  Taco.findById(req.params.tacoId)
+  .then(taco => {
+    if (taco.owner.equals(req.user.profile._id)) {
+      const commentDoc = taco.comments.id(req.params.commentId)
+      res.render('tacos/editComment', {
+        taco, 
+        comment: commentDoc,
+        title: 'Update Comment'
+      })
+    } else {
+      throw new Error('🚫 Not authorized 🚫')
+    }
+  })
+}
+
+function updateComment(req, res) {
+  Taco.findById(req.params.tacoId)
+  .then(taco => {
+    if (taco.owner.equals(req.user.profile._id)) {
+      const commentDoc = taco.comments.id(req.params.commentId)
+      commentDoc.set(req.body)
+      taco.save()
+      .then(() => {
+        res.redirect(`/tacos/${taco._id}`)
+      })
+      .catch(err => {
+        console.log(err)
+        res.redirect('/tacos')
+      })
+    } else {
+      throw new Error('🚫 Not authorized 🚫')
+    }
+  })
+  .catch(err => {
+    console.log(err)
+    res.redirect('/tacos')
+  })
+}
+
 export {
   index,
   create,
@@ -167,5 +207,7 @@ export {
   update,
   deleteTaco as delete,
   addComment,
-  deleteComment
+  deleteComment,
+  editComment,
+  updateComment
 }

@@ -12,6 +12,7 @@
         <form action="/tacos/<%= taco._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
           <button>Delete</button>
         </form>
+        <a href="/tacos/<%= taco._id %>/comments/<%= comment._id %>/edit" class="btn">Update</a>
       <% } %> 
     </p> 
   <% }) %>
