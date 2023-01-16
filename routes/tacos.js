@@ -12,6 +12,7 @@ router.post('/:id/comments', isLoggedIn, tacosCtrl.addComment)
 router.patch('/:id/flip-tasty', isLoggedIn, tacosCtrl.flipTasty)
 router.put('/:id', isLoggedIn, tacosCtrl.update)
 router.delete('/:id', isLoggedIn, tacosCtrl.delete)
+router.delete('/:tacoId/comments/:commentId', isLoggedIn, tacosCtrl.deleteComment)
 
 export {
   router

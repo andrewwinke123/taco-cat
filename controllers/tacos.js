@@ -135,6 +135,29 @@ function addComment(req, res) {
   })
 }
 
+function deleteComment(req, res) {
+  Taco.findById(req.params.tacoId)
+  .then(taco => {
+    if (taco.owner.equals(req.user.profile._id)) {
+      taco.comments.remove({_id: req.params.commentId})
+      taco.save()
+      .then(() => {
+        res.redirect(`/tacos/${taco._id}`)
+      })
+      .catch(err => {
+        console.log(err)
+        res.redirect('/tacos')
+      })
+    } else {
+      throw new Error('🚫 Not authorized 🚫')
+    }
+  })
+  .catch(err => {
+    console.log(err)
+    res.redirect('/tacos')
+  })
+}
+
 export {
   index,
   create,
@@ -143,5 +166,6 @@ export {
   edit,
   update,
   deleteTaco as delete,
-  addComment
+  addComment,
+  deleteComment
 }

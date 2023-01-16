@@ -7,7 +7,12 @@
   <h2>This taco is <%= taco.tasty ? 'tasty! 😋' : 'not tasty! 😫' %></h2>
   <% taco.comments?.forEach(comment => { %>
     <p>
-      <%= comment.content %> - <%= comment.commenter.name %> 
+      <%= comment.content %> - <%= comment.commenter.name %>
+      <% if (comment.commenter._id.equals(user?.profile._id)) { %>
+        <form action="/tacos/<%= taco._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+          <button>Delete</button>
+        </form>
+      <% } %> 
     </p> 
   <% }) %>
   <form action="/tacos/<%= taco._id %>/comments" method="POST">
