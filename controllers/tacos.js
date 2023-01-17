@@ -138,8 +138,9 @@ function addComment(req, res) {
 function deleteComment(req, res) {
   Taco.findById(req.params.tacoId)
   .then(taco => {
-    if (taco.owner.equals(req.user.profile._id)) {
-      taco.comments.remove({_id: req.params.commentId})
+    const commentDoc = taco.comments.id(req.params.commentId)
+    if (commentDoc.commenter.equals(req.user.profile._id)) {
+      taco.comments.remove(commentDoc)
       taco.save()
       .then(() => {
         res.redirect(`/tacos/${taco._id}`)
@@ -161,8 +162,8 @@ function deleteComment(req, res) {
 function editComment(req, res) {
   Taco.findById(req.params.tacoId)
   .then(taco => {
-    if (taco.owner.equals(req.user.profile._id)) {
-      const commentDoc = taco.comments.id(req.params.commentId)
+    const commentDoc = taco.comments.id(req.params.commentId)
+    if (commentDoc.commenter.equals(req.user.profile._id)) {
       res.render('tacos/editComment', {
         taco, 
         comment: commentDoc,
@@ -177,8 +178,8 @@ function editComment(req, res) {
 function updateComment(req, res) {
   Taco.findById(req.params.tacoId)
   .then(taco => {
-    if (taco.owner.equals(req.user.profile._id)) {
-      const commentDoc = taco.comments.id(req.params.commentId)
+    const commentDoc = taco.comments.id(req.params.commentId)
+    if (commentDoc.commenter.equals(req.user.profile._id)) {
       commentDoc.set(req.body)
       taco.save()
       .then(() => {
